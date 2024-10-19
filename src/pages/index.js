@@ -4,14 +4,24 @@ import SideBar from "@/components/sidebar";
 import UserInput from "@/components/userinput";
 import TypewriterText from "@/components/typewriter";
 import Spline from "@splinetool/react-spline";
+import axios from "axios";
 
 export default function Home() {
   // State to control the visibility of the TypewriterText
   const [showMessages, setShowMessages] = useState(false);
+  const [apiResponse, setApiResponse] = useState(null); // State to store the response from the API
 
   // Handle the click event on the Spline
-  const handleSplineClick = () => {
+  const handleSplineClick = async () => {
     setShowMessages(prev => !prev); // Toggle the visibility of the messages
+
+    try {
+      // send API request when Spline clicked
+      const response = await axios.get('http://127.0.0.1:8000/items/1?q=spline-click');
+      setApiResponse(response.data); // Store the API response
+    } catch (error) {
+      console.error('Error fetching data from API:', error);
+    }
   };
 
   return (
@@ -54,6 +64,22 @@ export default function Home() {
             zIndex="10" // Make sure it's on top
           >
             <TypewriterText />
+          </Box>
+        )}
+
+        {}
+        {apiResponse && (
+          <Box
+            position="absolute"
+            bottom="10%" // Place it near the bottom
+            left="50%"
+            transform="translateX(-50%)"
+            zIndex="10"
+            p="4"
+            bg="white"
+            boxShadow="md"
+          >
+            <p>API Response: {JSON.stringify(apiResponse)}</p>
           </Box>
         )}
 
