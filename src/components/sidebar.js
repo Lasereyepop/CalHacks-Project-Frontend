@@ -1,0 +1,146 @@
+import React from 'react';
+import {
+  Box,
+  VStack,
+  Text,
+  Flex
+} from '@chakra-ui/react';
+import {
+  EditIcon,
+  InfoOutlineIcon,
+  SettingsIcon,
+  ChevronLeftIcon
+} from '@chakra-ui/icons';
+import Image from 'next/image';
+
+
+function InteractiveBox({ hoverEffect, children }) {
+  return (
+    <Box
+      position="relative"
+      padding="13px"
+      textAlign="start"
+      borderRadius="5px"
+      bg="white"
+      transition="all 0.2s ease-in-out"
+      _hover={hoverEffect ? {
+        bg: "gray.100",
+        cursor: "pointer",
+        transform: "scale(1.05)",
+        boxShadow: "lg",
+      } : {}}
+      role="group"
+    >
+      {children}
+
+      {hoverEffect && (
+        <Box
+          position="absolute"
+          top="50%"
+          right="10px"
+          transform="translateY(-50%)"
+          opacity={0}
+          _groupHover={{ opacity: 1 }}
+          transition="opacity 0.2s ease-in-out"
+        >
+          <Image src="/images/ex1.png" height={10} width={50} alt="example1"></Image>
+        </Box>
+      )}
+    </Box>
+  );
+}
+
+export default function SideBar() {
+  return (
+    <Box
+      position="fixed"
+      left={0}
+      top={0}
+      height="100vh"
+      width="25%"
+      bg="white"
+      p="4"
+      boxShadow="md"
+      zIndex={1}
+    >
+      {/* Header Section */}
+      <Flex
+        fontSize="lg"
+        fontWeight="bold"
+        mb="4"
+        borderBottom="1px solid"
+        paddingBottom="15px"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+
+        <Box 
+          overflow="hidden"
+          onClick={() => window.location.reload()}
+          cursor="pointer"
+          >
+          <Image 
+            src="/images/logo.png" 
+            height={70}
+            width={70}
+            alt="logo"
+            objectFit='contain'
+          />
+        </Box>
+        <EditIcon />
+      </Flex>
+
+      {/* Content Section */}
+      <VStack
+        spacing="2"
+        align="stretch"
+        marginTop="15px"
+        height="calc(100vh - 100px)"
+      >
+        <InteractiveBox hoverEffect={true}>
+          Integral of x<sup>2</sup> + 2
+        </InteractiveBox>
+
+        <InteractiveBox hoverEffect={true}>
+          Differentiation of e<sup>x</sup> - x<sup>2</sup> + 2
+        </InteractiveBox>
+
+        <InteractiveBox hoverEffect={true}>
+          Resolving 2 {'<'} x {'<'} 20  
+        </InteractiveBox>
+
+        <InteractiveBox hoverEffect={true}>
+          Finding the value of x in x<sup>2</sup> + 3x - 2
+        </InteractiveBox>
+
+        <InteractiveBox hoverEffect={true}>
+          Drawing the graph of e<sup>x</sup> - x<sup>3</sup> - 2
+        </InteractiveBox>
+
+        <InteractiveBox hoverEffect={true}>
+          Making x the subject in y = x<sup>3</sup> - 2x<sup>2</sup>
+        </InteractiveBox>
+
+        <InteractiveBox hoverEffect={true}>
+          Find the tangent to y = x<sup>2</sup> when x = 0
+        </InteractiveBox>
+      </VStack>
+
+      <Flex
+        position="absolute"
+        bottom="0"
+        left="0"
+        width="100%"
+        padding="15px"
+        bg="white"
+        borderTop="1px solid lightgray"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <SettingsIcon boxSize={6} />
+        <InfoOutlineIcon boxSize={6} />
+        <ChevronLeftIcon boxSize={6} />
+      </Flex>
+    </Box>
+  );
+}
