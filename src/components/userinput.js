@@ -13,7 +13,7 @@ export default function UserInput({ onApiResponse }) {
 
   // Handle submission (for button click and Enter key press)
   const handleSubmit = async () => {
-    const trimmedInput = inputValue.trim(); 
+    const trimmedInput = inputValue.trim();
     if (!trimmedInput) {
       alert('Please enter some text.');
       return;
@@ -24,11 +24,21 @@ export default function UserInput({ onApiResponse }) {
 
     try {
       console.log("Sending POST request to:", url);
+
+      // Send user input to FastAPI and expect the video blob in response
       const response = await axios.post(url, {
         user_input: trimmedInput, // Send the trimmed input
+      }, {
+        responseType: 'blob'  // Expect the video blob as the response
       });
 
-      onApiResponse(response.data.message); // Handle the successful response
+      // Convert the video blob to a URL and pass it to the parent component
+      const videoBlob = new Blob([response.data], { type: 'video/mp4' });
+      const videoUrl = URL.createObjectURL(videoBlob);
+      console.log(videoUrl);  // Check if a valid URL is generated
+
+      onApiResponse(videoUrl);  // Send the video URL back to the parent component
+
       setInputValue(''); // Clear the input field after successful submission
     } catch (error) {
       console.error('Error submitting input:', error);
