@@ -4,7 +4,7 @@ import { Text, VStack, Center, Box } from '@chakra-ui/react';
 const TypewriterText = () => {
   const messages = [
     "Welcome to Montgomery!",
-    "Ask us any math question to start :)",
+    "Ask us any math question to start",
   ];
 
   const [displayedMessages, setDisplayedMessages] = useState(['', '', '']);
