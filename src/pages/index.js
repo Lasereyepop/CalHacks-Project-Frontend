@@ -9,6 +9,12 @@ import VideoComponent from "@/components/video";  // Import VideoComponent
 export default function Home() {
   const [videoUrl, setVideoUrl] = useState(null);  // State to store the video URL
   const [showTypewriter, setShowTypewriter] = useState(false);  // State to toggle TypewriterText visibility
+  const [userInputValue, setUserInputValue] = useState("");  // State for the user input field
+
+  // Function to update the user input value when an item from the sidebar is clicked
+  const handleAutoFill = (value) => {
+    setUserInputValue(value);  // Autofill the user input with the clicked value
+  };
 
   // Function passed to UserInput to handle the API response (the video blob URL)
   const handleUserInputResponse = (url) => {
@@ -40,8 +46,8 @@ export default function Home() {
         left={0}
         top={0}
       >
-        {/* Pass the handleReset function to the sidebar */}
-        <SideBar onReset={handleReset} />
+        {/* Pass the handleAutoFill function to the sidebar */}
+        <SideBar onReset={handleReset} onAutoFill={handleAutoFill} />
       </Box>
 
       {/* Main content area for Spline or Video */}
@@ -59,7 +65,6 @@ export default function Home() {
         {!videoUrl ? (
           <Box width="100%" height="100%" position="relative">
             {/* Spline Component */}
-
             <Spline 
               scene="https://prod.spline.design/NiiiQrjNKkVNlTYO/scene.splinecode" 
               onClick={handleSplineClick}
@@ -69,7 +74,7 @@ export default function Home() {
             {showTypewriter && (
               <Box
                 position="absolute"
-                top="40%"
+                top="45%"
                 left="50%"
                 transform="translate(-50%, -50%)"
               >
@@ -93,7 +98,11 @@ export default function Home() {
           zIndex="10"
           height="10vh"
         >
-          <UserInput onApiResponse={handleUserInputResponse} />
+          <UserInput 
+            onApiResponse={handleUserInputResponse} 
+            inputValue={userInputValue}  // Pass the input value for autofill
+            setInputValue={setUserInputValue}  // Pass function to update input value
+          />
         </Box>
       </Box>
     </Flex>

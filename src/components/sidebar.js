@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/icons';
 import Image from 'next/image';
 
-function InteractiveBox({ hoverEffect, children }) {
+function InteractiveBox({ hoverEffect, onClick, children }) {
   return (
     <Box
       position="relative"
@@ -28,6 +28,7 @@ function InteractiveBox({ hoverEffect, children }) {
         boxShadow: "lg",
       } : {}}
       role="group"
+      onClick={onClick}  // Add click handler
     >
       {children}
 
@@ -48,7 +49,7 @@ function InteractiveBox({ hoverEffect, children }) {
   );
 }
 
-export default function SideBar({ onReset }) {
+export default function SideBar({ onReset, onAutoFill }) {
   return (
     <Box
       position="fixed"
@@ -97,31 +98,31 @@ export default function SideBar({ onReset }) {
         marginTop="15px"
         height="calc(100vh - 100px)"
       >
-        <InteractiveBox hoverEffect={true}>
+        <InteractiveBox hoverEffect={true} onClick={() => onAutoFill("Integral of x^2 + 2")}>
           Integral of x<sup>2</sup> + 2
         </InteractiveBox>
 
-        <InteractiveBox hoverEffect={true}>
+        <InteractiveBox hoverEffect={true} onClick={() => onAutoFill("Differentiation of e^x - x^2 + 2")}>
           Differentiation of e<sup>x</sup> - x<sup>2</sup> + 2
         </InteractiveBox>
 
-        <InteractiveBox hoverEffect={true}>
+        <InteractiveBox hoverEffect={true} onClick={() => onAutoFill("Resolving 2 < x < 20")}>
           Resolving 2 {'<'} x {'<'} 20  
         </InteractiveBox>
 
-        <InteractiveBox hoverEffect={true}>
+        <InteractiveBox hoverEffect={true} onClick={() => onAutoFill("Finding the value of x in x^2 + 3x - 2")}>
           Finding the value of x in x<sup>2</sup> + 3x - 2
         </InteractiveBox>
 
-        <InteractiveBox hoverEffect={true}>
+        <InteractiveBox hoverEffect={true} onClick={() => onAutoFill("Drawing the graph of e^x - x^3 - 2")}>
           Drawing the graph of e<sup>x</sup> - x<sup>3</sup> - 2
         </InteractiveBox>
 
-        <InteractiveBox hoverEffect={true}>
+        <InteractiveBox hoverEffect={true} onClick={() => onAutoFill("Making x the subject in y = x^3 - 2x^2")}>
           Making x the subject in y = x<sup>3</sup> - 2x<sup>2</sup>
         </InteractiveBox>
 
-        <InteractiveBox hoverEffect={true}>
+        <InteractiveBox hoverEffect={true} onClick={() => onAutoFill("Find the tangent to y = x^2 when x = 0")}>
           Find the tangent to y = x<sup>2</sup> when x = 0
         </InteractiveBox>
       </VStack>

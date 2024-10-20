@@ -2,16 +2,15 @@ import React, { useState } from 'react';
 import { Box, Input, Button, Flex } from '@chakra-ui/react';
 import axios from 'axios';
 
-export default function UserInput({ onApiResponse }) {
-  const [inputValue, setInputValue] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // Add loading state
+export default function UserInput({ onApiResponse, inputValue, setInputValue }) {
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
-  // Handle input change
+  // Handle input change when the user types manually
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
 
-  // Handle submission (for button click and Enter key press)
+  // Handle submission for button click or Enter key press
   const handleSubmit = async () => {
     const trimmedInput = inputValue.trim();
     if (!trimmedInput) {
@@ -19,13 +18,13 @@ export default function UserInput({ onApiResponse }) {
       return;
     }
 
-    setIsLoading(true); // Set loading state to true
+    setIsLoading(true); // Set loading state
     const url = 'http://localhost:8000/submit';
 
     try {
       console.log("Sending POST request to:", url);
 
-      // Send user input to FastAPI and expect the video blob in response
+      // Send user input to FastAPI and expect a video blob in response
       const response = await axios.post(url, {
         user_input: trimmedInput, // Send the trimmed input
       }, {
@@ -38,7 +37,6 @@ export default function UserInput({ onApiResponse }) {
       console.log(videoUrl);  // Check if a valid URL is generated
 
       onApiResponse(videoUrl);  // Send the video URL back to the parent component
-
       setInputValue(''); // Clear the input field after successful submission
     } catch (error) {
       console.error('Error submitting input:', error);
@@ -52,11 +50,11 @@ export default function UserInput({ onApiResponse }) {
         alert('Error: ' + error.message);
       }
     } finally {
-      setIsLoading(false); // Set loading state back to false regardless of success or failure
+      setIsLoading(false); // Set loading state back to false
     }
   };
 
-  // Handle Enter key press
+  // Handle Enter key press for form submission
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSubmit();  // Call the submit function when Enter is pressed
@@ -79,8 +77,8 @@ export default function UserInput({ onApiResponse }) {
         <Box width="100%" position="relative">
           <Input
             placeholder="Enter your input"
-            value={inputValue}
-            onChange={handleInputChange}
+            value={inputValue}  // Autofilled from the parent component
+            onChange={handleInputChange}  // Handle manual input change
             onKeyPress={handleKeyPress}  // Add key press listener for Enter key
             size="lg"
             pr="50px"
