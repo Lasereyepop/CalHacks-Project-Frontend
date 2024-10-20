@@ -4,24 +4,19 @@ import SideBar from "@/components/sidebar";
 import UserInput from "@/components/userinput";
 import TypewriterText from "@/components/typewriter";
 import Spline from "@splinetool/react-spline";
-import axios from "axios";
 
 export default function Home() {
-  // State to control the visibility of the TypewriterText
   const [showMessages, setShowMessages] = useState(false);
-  const [apiResponse, setApiResponse] = useState(null); // State to store the response from the API
+  const [apiResponse, setApiResponse] = useState(null); // State to store API responses
 
-  // Handle the click event on the Spline
-  const handleSplineClick = async () => {
-    setShowMessages(prev => !prev); // Toggle the visibility of the messages
+  // Handle the click event on the Spline to show/hide messages only
+  const handleSplineClick = () => {
+    setShowMessages(prev => !prev); // Toggle visibility of the messages
+  };
 
-    try {
-      // send API request when Spline clicked
-      const response = await axios.get('http://127.0.0.1:8000/items/1?q=spline-click');
-      setApiResponse(response.data); // Store the API response
-    } catch (error) {
-      console.error('Error fetching data from API:', error);
-    }
+  // This function is passed to UserInput to handle the API response
+  const handleUserInputResponse = (responseData) => {
+    setApiResponse(responseData);  // Update the state when UserInput sends a response
   };
 
   return (
@@ -41,37 +36,34 @@ export default function Home() {
 
       <Box
         flex="1"
-        ml="25%" // Ensures main content doesn't overlap with the sidebar
+        ml="25%"
         display="flex"
         justifyContent="center"
         alignItems="center"
-        height="100vh" // Ensures vertical centering in full viewport height
-        position="relative" // Needed for positioning child elements
+        height="100vh"
+        position="relative"
       >
-        {/* Spline component that listens for clicks */}
         <Spline
           scene="https://prod.spline.design/nnYEfMcRPECoorRV/scene.splinecode"
-          onClick={handleSplineClick}
+          onClick={handleSplineClick}  // Now just toggling the message visibility
         />
 
-        {/* Conditionally render the TypewriterText in the center when Spline is clicked */}
         {showMessages && (
           <Box
-            position="absolute" // To overlay this on top of the Spline
+            position="absolute"
             top="50%"
             left="50%"
-            transform="translate(-50%, -50%)" // Center it vertically and horizontally
-            zIndex="10" // Make sure it's on top
+            transform="translate(-50%, -50%)"
+            zIndex="10"
           >
             <TypewriterText />
           </Box>
         )}
 
-        {}
         {apiResponse && (
           <Box
             position="absolute"
-            bottom="10%" // Place it near the bottom
+            bottom="10%"
             left="50%"
             transform="translateX(-50%)"
             zIndex="10"
@@ -83,7 +75,8 @@ export default function Home() {
           </Box>
         )}
 
-        <UserInput /> {/* Centered UserInput component */}
+        {/* Pass the function to handle API response to UserInput */}
+        <UserInput onApiResponse={handleUserInputResponse} />
       </Box>
     </Flex>
   );
