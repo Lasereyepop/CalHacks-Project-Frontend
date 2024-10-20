@@ -2,21 +2,15 @@ import { useState } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import SideBar from "@/components/sidebar";
 import UserInput from "@/components/userinput";
-import TypewriterText from "@/components/typewriter";
 import Spline from "@splinetool/react-spline";
+import TypewriterText from "@/components/typewriter";
 
 export default function Home() {
-  const [showMessages, setShowMessages] = useState(false);
-  const [apiResponse, setApiResponse] = useState(null); // State to store API responses
+  const [videoUrl, setVideoUrl] = useState(null);  // State to store the video URL
 
-  // Handle the click event on the Spline to show/hide messages (not related to submission)
-  const handleSplineClick = () => {
-    setShowMessages(prev => !prev); // Toggle visibility of the messages
-  };
-
-  // This function is passed to UserInput to handle the API response
-  const handleUserInputResponse = (responseData) => {
-    setApiResponse(responseData);  // Update the state when UserInput sends a response
+  // Function passed to UserInput to handle the API response
+  const handleUserInputResponse = (url) => {
+    setVideoUrl(url);  // Update the state with the video URL
   };
 
   return (
@@ -43,39 +37,20 @@ export default function Home() {
         height="100vh"
         position="relative"
       >
-        <Spline
-          scene="https://prod.spline.design/nnYEfMcRPECoorRV/scene.splinecode"
-          onClick={handleSplineClick}  // Now just toggling the message visibility
-        />
-
-        {showMessages && (
-          <Box
-            position="absolute"
-            top="50%"
-            left="50%"
-            transform="translate(-50%, -50%)"
-            zIndex="10"
-          >
+        {!videoUrl ? (
+          <>
+            <Spline scene="https://prod.spline.design/nnYEfMcRPECoorRV/scene.splinecode" />
             <TypewriterText />
+          </>
+        ) : (
+          <Box position="relative" zIndex="10" width="100%" height="auto">
+            <video width="100%" height="auto" controls>
+              <source src={videoUrl} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </Box>
         )}
 
-        {apiResponse && (
-          <Box
-            position="absolute"
-            bottom="10%"
-            left="50%"
-            transform="translateX(-50%)"
-            zIndex="10"
-            p="4"
-            bg="white"
-            boxShadow="md"
-          >
-            <p>API Response: {JSON.stringify(apiResponse)}</p>
-          </Box>
-        )}
-
-        {/* Pass the function to handle API response to UserInput */}
         <UserInput onApiResponse={handleUserInputResponse} />
       </Box>
     </Flex>

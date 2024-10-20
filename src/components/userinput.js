@@ -6,11 +6,13 @@ export default function UserInput({ onApiResponse }) {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Add loading state
 
+  // Handle input change
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
 
-  const handleButtonClick = async () => {
+  // Handle submission (for button click and Enter key press)
+  const handleSubmit = async () => {
     const trimmedInput = inputValue.trim(); 
     if (!trimmedInput) {
       alert('Please enter some text.');
@@ -33,23 +35,21 @@ export default function UserInput({ onApiResponse }) {
 
       // More informative error handling:
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        alert(`Error: ${error.response.status} - ${error.response.data.detail || 'Server error'}`);  // Display specific server error if available.
+        alert(`Error: ${error.response.status} - ${error.response.data.detail || 'Server error'}`);
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in Node.js
         alert('Error: No response from server.');
       } else {
-        // Something happened in setting up the request that triggered an Error
         alert('Error: ' + error.message);
       }
-
-
-
     } finally {
       setIsLoading(false); // Set loading state back to false regardless of success or failure
+    }
+  };
+
+  // Handle Enter key press
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit();  // Call the submit function when Enter is pressed
     }
   };
 
@@ -71,22 +71,21 @@ export default function UserInput({ onApiResponse }) {
             placeholder="Enter your input"
             value={inputValue}
             onChange={handleInputChange}
+            onKeyPress={handleKeyPress}  // Add key press listener for Enter key
             size="lg"
             pr="50px"
           />
           <Button
             color="white"
             background="black"
-            onClick={handleButtonClick}
+            onClick={handleSubmit}  // Trigger submission on button click
             position="absolute"
             right="0px"
             top="50%"
             transform="translateY(-50%)"
             size="lg"
-            // ...
-            isLoading={isLoading} // Disable button while loading
+            isLoading={isLoading}  // Disable button while loading
             loadingText="Submitting"
-            // ...
           >
             Submit
           </Button>
