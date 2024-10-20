@@ -18,7 +18,6 @@ export default function VideoComponent({ videoUrl }) {
         ref={videoRef}
         style={{ width: '100%', height: '100%', objectFit: 'cover' }} // Ensure the video covers the available space
         autoPlay
-        muted  // Mute to allow autoplay in most browsers
         playsInline  // Ensures inline playback on mobile devices
       >
         <source src={videoUrl} type="video/mp4" />
