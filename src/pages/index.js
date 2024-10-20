@@ -9,7 +9,7 @@ export default function Home() {
   const [showMessages, setShowMessages] = useState(false);
   const [apiResponse, setApiResponse] = useState(null); // State to store API responses
 
-  // Handle the click event on the Spline to show/hide messages only
+  // Handle the click event on the Spline to show/hide messages (not related to submission)
   const handleSplineClick = () => {
     setShowMessages(prev => !prev); // Toggle visibility of the messages
   };

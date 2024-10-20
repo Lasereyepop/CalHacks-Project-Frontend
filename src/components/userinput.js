@@ -2,34 +2,54 @@ import React, { useState } from 'react';
 import { Box, Input, Button, Flex } from '@chakra-ui/react';
 import axios from 'axios';
 
-export default function UserInput() {
-  const [inputValue, setInputValue] = useState(''); // Initialize state
-  const [videoUrl, setVideoUrl] = useState(null); // State to store video URL or response
+export default function UserInput({ onApiResponse }) {
+  const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   const handleInputChange = (e) => {
-    setInputValue(e.target.value); // Update input value
+    setInputValue(e.target.value);
   };
 
   const handleButtonClick = async () => {
-    if (!inputValue.trim()) {
+    const trimmedInput = inputValue.trim(); 
+    if (!trimmedInput) {
       alert('Please enter some text.');
       return;
     }
 
+    setIsLoading(true); // Set loading state to true
+    const url = 'http://localhost:8000/submit';
+
     try {
-      const response = await axios.post('http://127.0.0.1:8000/submit', {
-        user_input: inputValue,
-      }, {
-        responseType: 'blob' // Set responseType to blob for video
+      console.log("Sending POST request to:", url);
+      const response = await axios.post(url, {
+        user_input: trimmedInput, // Send the trimmed input
       });
 
-      // Create a URL for the video blob
-      const videoBlob = new Blob([response.data], { type: 'video/mp4' });
-      const videoUrl = URL.createObjectURL(videoBlob);
-      setVideoUrl(videoUrl);
+      onApiResponse(response.data.message); // Handle the successful response
+      setInputValue(''); // Clear the input field after successful submission
     } catch (error) {
       console.error('Error submitting input:', error);
-      alert('Error submitting input');
+
+      // More informative error handling:
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        alert(`Error: ${error.response.status} - ${error.response.data.detail || 'Server error'}`);  // Display specific server error if available.
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in Node.js
+        alert('Error: No response from server.');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        alert('Error: ' + error.message);
+      }
+
+
+
+    } finally {
+      setIsLoading(false); // Set loading state back to false regardless of success or failure
     }
   };
 
@@ -48,7 +68,7 @@ export default function UserInput() {
       <Flex width="100%" alignItems="center">
         <Box width="100%" position="relative">
           <Input
-            placeholder="Make your move!"
+            placeholder="Enter your input"
             value={inputValue}
             onChange={handleInputChange}
             size="lg"
@@ -63,21 +83,15 @@ export default function UserInput() {
             top="50%"
             transform="translateY(-50%)"
             size="lg"
+            // ...
+            isLoading={isLoading} // Disable button while loading
+            loadingText="Submitting"
+            // ...
           >
             Submit
           </Button>
         </Box>
       </Flex>
-
-      {/* Display the video if the URL is available */}
-      {videoUrl && (
-        <Box mt={4}>
-          <video width="100%" height="auto" controls>
-            <source src={videoUrl} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </Box>
-      )}
     </Box>
   );
 }
