@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Box,
   VStack,
-  Text,
   Flex
 } from '@chakra-ui/react';
 import {
@@ -12,7 +11,6 @@ import {
   ChevronLeftIcon
 } from '@chakra-ui/icons';
 import Image from 'next/image';
-
 
 function InteractiveBox({ hoverEffect, children }) {
   return (
@@ -50,7 +48,7 @@ function InteractiveBox({ hoverEffect, children }) {
   );
 }
 
-export default function SideBar() {
+export default function SideBar({ onReset }) {
   return (
     <Box
       position="fixed"
@@ -87,7 +85,9 @@ export default function SideBar() {
             objectFit='contain'
           />
         </Box>
-        <EditIcon />
+
+        {/* Call onReset function when EditIcon is clicked */}
+        <EditIcon onClick={onReset} cursor="pointer" />
       </Flex>
 
       {/* Content Section */}
